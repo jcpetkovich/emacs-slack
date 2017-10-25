@@ -38,7 +38,7 @@
             (string= last-read ts))
         (cl-labels ((on-update-mark (&key data &allow-other-keys)
                                     (slack-request-handle-error
-                                     (data "slack-room-update-mark"))))
+                                     (data "slack-buffer-update-mark"))))
           (with-slots (id) room
             (slack-request
              (slack-request-create
