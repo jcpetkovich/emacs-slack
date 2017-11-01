@@ -70,6 +70,7 @@
 (require 'slack-edit-file-comment-buffer)
 (require 'slack-search-result-buffer)
 (require 'slack-stars-buffer)
+(require 'slack-file-comment-compose-buffer)
 
 (require 'slack-websocket)
 (require 'slack-request)
