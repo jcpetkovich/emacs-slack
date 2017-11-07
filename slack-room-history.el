@@ -46,39 +46,13 @@
 
 (defclass _slack-file-search-history (_slack-room-history) ())
 
-(defmethod slack-room-prev-link-info ((room slack-room))
-  (with-slots (oldest) room
-    (if oldest
-        (oref oldest ts))))
-
-(defmethod slack-room-propertize-load-more ((room slack-room) base-text)
-  (propertize base-text
-              'oldest (slack-room-prev-link-info room)
-              'class '_slack-room-history))
-
-(defmethod slack-room-propertize-load-more ((room slack-search-result) base-text)
-  (with-slots (oldest) room
-    (with-slots (info) oldest
-      (propertize base-text
-                  'oldest (slack-room-prev-link-info room)
-                  'channel-id (oref info channel-id)
-                  'class '_slack-search-history))))
-
-(defmethod slack-room-propertize-load-more ((room slack-file-search-result) base-text)
-  (propertize base-text
-              'oldest (slack-room-prev-link-info room)
-              'class '_slack-file-search-history))
-
 (defmethod slack-room-previous-link ((room slack-room))
-  (when (slack-room-prev-link-info room)
-    (slack-room-propertize-load-more
-     room
-     (propertize "(load more message)"
-                 'face '(:underline t)
-                 'keymap (let ((map (make-sparse-keymap)))
-                           (define-key map (kbd "RET")
-                             #'slack-room-history-load)
-                           map)))))
+  (propertize "(load more message)"
+              'face '(:underline t)
+              'keymap (let ((map (make-sparse-keymap)))
+                        (define-key map (kbd "RET")
+                          #'slack-room-history-load)
+                        map)))
 
 (defun slack-room-history-load ()
   (interactive)
@@ -105,8 +79,7 @@
                  (cl-loop for data in datum
                           collect (slack-message-create data team :room room))))
            (if oldest (slack-room-set-prev-messages room messages)
-             (slack-room-set-messages room messages)
-             (slack-room-reset-last-read room))
+             (slack-room-set-messages room messages))
            (if (and after-success (functionp after-success))
                (funcall after-success))))))
     (slack-request

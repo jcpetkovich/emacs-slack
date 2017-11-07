@@ -90,13 +90,6 @@
 (defclass slack-file-email-to (slack-file-email-from) ())
 (defclass slack-file-email-cc (slack-file-email-from) ())
 
-(defun slack-merge-list (old-list new-list)
-  (cl-loop for n in new-list
-           do (let ((o (cl-find-if #'(lambda (e) (slack-equalp n e))
-                                   old-list)))
-                (if o (slack-merge o n)
-                  (push n old-list)))))
-
 (defmethod slack-merge ((old slack-reaction) new)
   (with-slots (count users) old
     (setq count (oref new count))
@@ -142,7 +135,6 @@
                                        :id "F"
                                        :team-id (oref team id)
                                        :created (format-time-string "%s")
-                                       :last_read "0"
                                        :latest nil
                                        :unread_count 0
                                        :unread_count_display 0
@@ -221,7 +213,6 @@
             (slack-merge old f)
           (push f messages)
           (setq messages (slack-room-sorted-messages room))
-          (oset room oldest (car messages))
           (oset room latest (car (last messages))))))))
 
 (defmethod slack-message-body ((file slack-file) team)
@@ -377,7 +368,6 @@
                                collect (slack-file-create e))))
            (if oldest
                (slack-room-set-prev-messages room files)
-             (slack-room-reset-last-read room)
              (slack-room-set-messages room files)))
          (if after-success
              (funcall after-success)))))
