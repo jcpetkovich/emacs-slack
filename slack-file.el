@@ -474,20 +474,11 @@
 
 (defconst slack-file-comment-add-url "https://slack.com/api/files.comments.add")
 
-(defmethod slack-file-id ((m slack-file-message))
-  (slack-file-id (oref m file)))
-
 (defmethod slack-file-id ((file slack-file))
   (oref file id))
 
-(defmethod slack-file-channel ((m slack-file-message))
-  (oref m channel))
-
 (defmethod slack-file-channel ((_file slack-file))
   nil)
-
-(defmethod slack-file-comment-id ((m slack-file-message))
-  (slack-file-comment-id (oref m comment)))
 
 (defmethod slack-file-comment-id ((file-comment))
   (oref file-comment id))

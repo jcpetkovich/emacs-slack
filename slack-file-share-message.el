@@ -25,7 +25,7 @@
 ;;; Code:
 (require 'eieio)
 (require 'slack-team)
-(require 'slack-message)
+(require 'slack-file-message)
 
 (defclass slack-file-share-message (slack-file-message)
   ((upload :initarg :upload)

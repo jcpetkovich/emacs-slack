@@ -109,9 +109,6 @@
 (defmethod slack-message-starred-p ((m slack-message))
   (oref m is-starred))
 
-(defmethod slack-message-starred-p ((m slack-file-message))
-  (oref (oref m file) is-starred))
-
 (defmethod slack-message-starred-str ((m slack-message))
   (if (slack-message-starred-p m)
       ":star:"

@@ -51,9 +51,6 @@
    (thread-ts :initarg :thread_ts :initform nil)
    (hide :initarg :hide :initform nil)))
 
-(defclass slack-file-message (slack-message)
-  ((file :initarg :file)))
-
 (defclass slack-reply (slack-message)
   ((user :initarg :user :initform nil)
    (reply-to :initarg :reply_to :type integer)
@@ -126,13 +123,6 @@
 
 (defmethod slack-message-set-file ((m slack-message) _payload _team)
   m)
-
-(defmethod slack-message-set-file ((m slack-file-message) payload team)
-  (let ((file (slack-file-create (plist-get payload :file))))
-    (oset m file file)
-    (slack-file-set-channel file (plist-get payload :channel))
-    (slack-file-pushnew file team)
-    m))
 
 (defmethod slack-message-set-file-comment ((m slack-message) _payload)
   m)
@@ -287,14 +277,8 @@
 (defmethod slack-reaction-find ((m slack-message) reaction)
   (slack-reaction--find (oref m reactions) reaction))
 
-(defmethod slack-reaction-find ((m slack-file-message) reaction)
-  (slack-reaction-find (oref m file) reaction))
-
 (defmethod slack-message-reactions ((this slack-message))
   (oref this reactions))
-
-(defmethod slack-message-reactions ((this slack-file-message))
-  (slack-message-reactions (oref this file)))
 
 (defmethod slack-message-get-param-for-reaction ((m slack-message))
   (cons "timestamp" (oref m ts)))
