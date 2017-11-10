@@ -48,10 +48,6 @@
    (reactions :initarg :reactions type list)
    (is-starred :initarg :is_starred :type boolean :initform nil)))
 
-(defclass slack-file-comment-message (slack-file-message)
-  ((comment :initarg :comment :initform nil)
-   (comment-id :initarg :comment-id :type string)))
-
 (defclass slack-file-mention-message (slack-file-message)
   ((user :initarg :user :initform nil)))
 
@@ -118,82 +114,6 @@
           (slack-message-star-api-request url
                                           (list (slack-message-star-api-params file-comment))
                                           team)))))
-
-(defmethod slack-message-set-file-comment ((m slack-file-comment-message) payload)
-  (let* ((file-id (plist-get (plist-get payload :file) :id))
-         (comment (plist-get payload :comment))
-         (file-comment (slack-file-comment-create comment file-id)))
-    (oset m comment file-comment)
-    (oset m comment-id (oref file-comment id))
-    m))
-
-(defmethod slack-message-sender-name ((m slack-file-comment-message) team)
-  (slack-user-name (oref (oref m comment) user) team))
-
-(defmethod slack-message-sender-id ((m slack-file-comment-message))
-  (oref (oref m comment) user))
-
-(defmethod slack-message-star-added ((m slack-file-comment-message))
-  (slack-message-star-added (oref m comment)))
-
-(defmethod slack-message-star-removed ((m slack-file-comment-message))
-  (slack-message-star-removed (oref m comment)))
-
-(defmethod slack-message-star-api-params ((m slack-file-comment-message))
-  (slack-message-star-api-params (oref m comment)))
-
-(defmethod slack-reaction-delete ((this slack-file-comment-message) reaction)
-  (slack-reaction-delete (oref this comment) reaction))
-
-(defmethod slack-reaction-push ((this slack-file-comment-message) reaction)
-  (slack-reaction-push (oref this comment) reaction))
-
-(defmethod slack-reaction-find ((this slack-file-comment-message) reaction)
-  (slack-reaction-find (oref this comment) reaction))
-
-(defmethod slack-message-reactions ((this slack-file-comment-message))
-  (slack-message-reactions (oref this comment)))
-
-(defmethod slack-message-get-param-for-reaction ((m slack-file-comment-message))
-  (cons "file_comment" (oref (oref m comment) id)))
-
-(defmethod slack-file-id ((m slack-file-comment-message))
-  (slack-file-id (oref m comment)))
-
-(defmethod slack-message-starred-p ((m slack-file-comment-message) &rest _args)
-  (oref (oref m comment) is-starred))
-
-(defmethod slack-message-to-string ((this slack-file-comment-message) team)
-  (with-slots (permalink name id page) (oref this file)
-    (with-slots (comment) (oref this comment)
-      (let* ((face '(:underline t))
-             (text (format "commented on %s <%s|open in browser>\n%s"
-                           (slack-file-link-info (oref (oref this file) id) name)
-                           permalink
-                           (format "“ %s" (slack-message-unescape-string comment
-                                                                          team))))
-             (header (slack-message-header-to-string this team))
-             (reactions (slack-message-reaction-to-string this)))
-        (slack-format-message header text reactions)))))
-
-(defmethod slack-message-get-user-id ((m slack-file-comment-message))
-  (oref (oref m comment) user))
-
-(defmethod slack-message-edit-type ((_m slack-file-comment-message))
-  'edit-file-comment)
-
-(defmethod slack-message-get-text ((m slack-file-comment-message))
-  (oref (oref m comment) comment))
-
-(defmethod slack-message-changed--copy ((this slack-file-comment-message) other)
-  (when (slack-file-comment-message-p other)
-    (let ((changed (call-next-method)))
-      (with-slots ((old-comment comment) text) this
-        (let ((new-comment (oref other comment)))
-          (unless (string= (oref old-comment comment) (oref new-comment comment))
-            (oset old-comment comment (oref new-comment comment))
-            (setq changed t))))
-      changed)))
 
 (defmethod slack-ts ((this slack-file-comment))
   (number-to-string (oref this timestamp)))

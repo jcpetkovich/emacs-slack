@@ -723,5 +723,9 @@
                                              team)))
       (slack-buffer-replace buffer file)))
 
+(defmethod slack-find-file-comment ((this slack-file) comment-id)
+  (cl-find-if #'(lambda (e) (string= (oref e id) comment-id))
+              (append (oref this comments) (list (oref this initial-comment)))))
+
 (provide 'slack-file)
 ;;; slack-file.el ends here

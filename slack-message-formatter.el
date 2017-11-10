@@ -103,9 +103,7 @@
     (format-time-string "%Y-%m-%d %H:%M:%S"
                         (seconds-to-time ts))))
 
-(defalias 'slack-starred-p 'slack-message-starred-p)
-
-(defmethod slack-message-starred-p ((m slack-message) &rest _args)
+(defmethod slack-starred-p ((m slack-message) &rest _args)
   (oref m is-starred))
 
 (defun slack-format-message (&rest args)

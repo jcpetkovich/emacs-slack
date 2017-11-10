@@ -30,11 +30,14 @@
   ((file-id :initarg :file-id :type string)
    (file :initarg :file)))
 
-(defmethod slack-message-file ((this slack-file-message) team)
+(defmethod slack-find-file ((this slack-file-message) team)
   (slack-file-find (oref this file-id) team))
 
-(defmethod slack-message-starred-p ((m slack-file-message) &rest _args)
-  (oref (oref m file) is-starred))
+(defmethod slack-message-file ((this slack-file-message) team)
+  (slack-find-file this team))
+
+(defmethod slack-starred-p ((this slack-file-message) team)
+  (oref (slack-find-file this team) is-starred))
 
 (defmethod slack-file-comment-id ((m slack-file-message))
   (slack-file-comment-id (oref m comment)))
