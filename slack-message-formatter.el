@@ -103,11 +103,6 @@
     (format-time-string "%Y-%m-%d %H:%M:%S"
                         (seconds-to-time ts))))
 
-(defmethod slack-message-header ((m slack-message) team)
-  (format "%s %s"
-          (slack-message-sender-name m team)
-          (if (slack-starred-p m team) ":star:" "")))
-
 (defalias 'slack-starred-p 'slack-message-starred-p)
 
 (defmethod slack-message-starred-p ((m slack-message) &rest _args)

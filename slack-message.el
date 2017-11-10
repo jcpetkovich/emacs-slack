@@ -308,5 +308,10 @@
 (defmethod slack-message-get-text ((m slack-message))
   (oref m text))
 
+(defmethod slack-message-header ((m slack-message) team)
+  (format "%s %s"
+          (slack-message-sender-name m team)
+          (if (slack-starred-p m team) ":star:" "")))
+
 (provide 'slack-message)
 ;;; slack-message.el ends here
