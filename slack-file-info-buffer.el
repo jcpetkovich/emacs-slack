@@ -101,7 +101,8 @@
                                comments-count)
 
 
-         'file-id (oref file id)))
+         'file-id (oref file id)
+         'ts (slack-ts file)))
 
       (let ((comments (slack-file-comments-to-string file team)))
         (mapc #'(lambda (comment)
