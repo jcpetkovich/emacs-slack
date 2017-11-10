@@ -232,7 +232,7 @@
   (slack-ts-to-time (slack-ts message)))
 
 (defmethod slack-user-find ((m slack-message) team)
-  (slack-user--find (slack-message-sender-id m) team))
+  (slack-user--find (slack-message-sender-id m team) team))
 
 (defun slack-message-copy-link ()
   (interactive)

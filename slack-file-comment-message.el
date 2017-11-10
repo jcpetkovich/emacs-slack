@@ -41,11 +41,15 @@
 (defmethod slack-file-comment-id ((m slack-file-comment-message))
   (oref m comment-id))
 
-(defmethod slack-message-sender-name ((m slack-file-comment-message) team)
-  (slack-user-name (oref (oref m comment) user) team))
+(defmethod slack-user-find ((m slack-file-comment-message) team)
+  (slack-user--find (slack-message-sender-id m team) team))
 
-(defmethod slack-message-sender-id ((m slack-file-comment-message))
-  (oref (oref m comment) user))
+(defmethod slack-message-sender-name ((m slack-file-comment-message) team)
+  (slack-user-name (slack-message-sender-id m team) team))
+
+(defmethod slack-message-sender-id ((m slack-file-comment-message) team)
+  (let ((comment (slack-find-file-comment m team)))
+    (oref comment user)))
 
 (defmethod slack-message-star-added ((m slack-file-comment-message))
   (slack-message-star-added (oref m comment)))
