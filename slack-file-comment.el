@@ -158,7 +158,7 @@
 (defmethod slack-file-id ((m slack-file-comment-message))
   (slack-file-id (oref m comment)))
 
-(defmethod slack-message-starred-p ((m slack-file-comment-message))
+(defmethod slack-message-starred-p ((m slack-file-comment-message) &rest _args)
   (oref (oref m comment) is-starred))
 
 (defmethod slack-message-to-string ((this slack-file-comment-message) team)

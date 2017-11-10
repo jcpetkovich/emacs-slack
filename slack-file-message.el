@@ -33,7 +33,7 @@
 (defmethod slack-message-file ((this slack-file-message) team)
   (slack-file-find (oref this file-id) team))
 
-(defmethod slack-message-starred-p ((m slack-file-message))
+(defmethod slack-message-starred-p ((m slack-file-message) &rest _args)
   (oref (oref m file) is-starred))
 
 (defmethod slack-file-comment-id ((m slack-file-message))

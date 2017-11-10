@@ -110,7 +110,7 @@
 
 (defalias 'slack-starred-p 'slack-message-starred-p)
 
-(defmethod slack-message-starred-p ((m slack-message) team)
+(defmethod slack-message-starred-p ((m slack-message) &rest _args)
   (oref m is-starred))
 
 (defun slack-format-message (&rest args)
