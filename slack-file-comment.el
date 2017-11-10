@@ -49,7 +49,8 @@
    (is-starred :initarg :is_starred :type boolean :initform nil)))
 
 (defclass slack-file-comment-message (slack-file-message)
-  ((comment :initarg :comment :initform nil)))
+  ((comment :initarg :comment :initform nil)
+   (comment-id :initarg :comment-id :type string)))
 
 (defclass slack-file-mention-message (slack-file-message)
   ((user :initarg :user :initform nil)))
@@ -123,6 +124,7 @@
          (comment (plist-get payload :comment))
          (file-comment (slack-file-comment-create comment file-id)))
     (oset m comment file-comment)
+    (oset m comment-id (oref file-comment id))
     m))
 
 (defmethod slack-message-sender-name ((m slack-file-comment-message) team)
