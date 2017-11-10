@@ -106,6 +106,8 @@
 (defmethod slack-message-header ((m slack-message) team)
   (slack-message-sender-name m team))
 
+(defalias 'slack-starred-p 'slack-message-starred-p)
+
 (defmethod slack-message-starred-p ((m slack-message))
   (oref m is-starred))
 
