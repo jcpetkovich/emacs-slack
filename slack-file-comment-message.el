@@ -73,10 +73,7 @@
 
 (defmethod slack-find-file-comment ((this slack-file-comment-message) team)
   (slack-if-let* ((file (slack-find-file this team)))
-      (slack-find-file-comment file (oref this comment-id))
-    (message "Can't find file comment, FILE-ID: %s FILE-COMMENT-ID: %s"
-             (oref this file-id) (oref this comment-id))
-    nil))
+      (slack-find-file-comment file (oref this comment-id))))
 
 (defmethod slack-starred-p ((this slack-file-comment-message) team)
   (slack-if-let* ((comment (slack-find-file-comment this team)))

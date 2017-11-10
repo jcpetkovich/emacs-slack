@@ -51,6 +51,17 @@
 (defclass slack-file-mention-message (slack-file-message)
   ((user :initarg :user :initform nil)))
 
+(defun slack-file-comment-create (payload file-id)
+  (let* ((reactions (mapcar #'slack-reaction-create
+                            (append (plist-get payload :reactions) nil)))
+         (comment (apply #'make-instance
+                         'slack-file-comment
+                         (slack-collect-slots 'slack-file-comment
+                                              payload))))
+    (oset comment file-id file-id)
+    (oset comment reactions reactions)
+    comment))
+
 (defmethod slack-reaction-delete ((this slack-file-comment) reaction)
   (with-slots (reactions) this
     (setq reactions

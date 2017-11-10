@@ -148,19 +148,6 @@
                                        :unread_count_display 0
                                        :messages '())))))
 
-(defun slack-file-comment-create (payload file-id)
-  (let* ((reactions (mapcar #'slack-reaction-create
-                            (append (plist-get payload :reactions) nil)))
-         (comment (apply #'make-instance
-                         'slack-file-comment
-                         (slack-collect-slots 'slack-file-comment
-                                              (plist-put payload
-                                                         :reactions
-                                                         reactions)))))
-    (oset comment file-id file-id)
-    (oset comment reactions reactions)
-    comment))
-
 (defun slack-file-create-email-from (payload &optional type)
   (and payload
        (make-instance (or (and (eq type 'to) 'slack-file-email-to)
