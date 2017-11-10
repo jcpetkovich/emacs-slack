@@ -55,10 +55,16 @@
   (slack-reaction-find (oref m file) reaction))
 
 (defmethod slack-message-set-file ((m slack-file-message) payload team)
-  (let ((file (slack-file-create (plist-get payload :file))))
+  (let* ((file (slack-file-create (plist-get payload :file)))
+         (comment-payload (append (plist-get payload :comment) nil))
+         (comment (and comment-payload
+                       (slack-file-comment-create comment-payload
+                                                  (oref file id)))))
     (oset m file file)
     (oset m file-id (oref file id))
     (slack-file-set-channel file (plist-get payload :channel))
+    (when comment
+      (oset file comments (list comment)))
     (slack-file-pushnew file team)
     m))
 
