@@ -90,12 +90,12 @@
 (defclass slack-file-email-to (slack-file-email-from) ())
 (defclass slack-file-email-cc (slack-file-email-from) ())
 
-(defun slack-merge-list (old-list new-list)
-  (cl-loop for n in new-list
+(defmacro slack-merge-list (old-list new-list)
+  `(cl-loop for n in ,new-list
            do (let ((o (cl-find-if #'(lambda (e) (slack-equalp n e))
-                                   old-list)))
+                                   ,old-list)))
                 (if o (slack-merge o n)
-                  (push n old-list)))))
+                  (push n ,old-list)))))
 
 (defmethod slack-merge ((old slack-reaction) new)
   (with-slots (count users) old
