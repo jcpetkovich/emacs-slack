@@ -108,13 +108,8 @@
 
 (defalias 'slack-starred-p 'slack-message-starred-p)
 
-(defmethod slack-message-starred-p ((m slack-message))
+(defmethod slack-message-starred-p ((m slack-message) team)
   (oref m is-starred))
-
-(defmethod slack-message-starred-str ((m slack-message))
-  (if (slack-message-starred-p m)
-      ":star:"
-    ""))
 
 (defun slack-format-message (&rest args)
   (let ((messages args))
@@ -139,7 +134,7 @@
   (let ((header (format "%s %s"
                         (slack-message-put-header-property
                          (slack-message-header m team))
-                        (slack-message-starred-str m))))
+                        (if (slack-starred-p m team) ":star:" ""))))
     (if (slack-team-display-profile-imagep team)
         (slack-message-header-with-image m header team)
       header)))
