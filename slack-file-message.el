@@ -39,9 +39,6 @@
 (defmethod slack-starred-p ((this slack-file-message) team)
   (oref (slack-find-file this team) is-starred))
 
-(defmethod slack-file-comment-id ((m slack-file-message))
-  (slack-file-comment-id (oref m comment)))
-
 (defmethod slack-file-channel ((m slack-file-message))
   (oref m channel))
 

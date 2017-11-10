@@ -38,6 +38,9 @@
     (oset m comment-id (oref file-comment id))
     m))
 
+(defmethod slack-file-comment-id ((m slack-file-comment-message))
+  (oref m comment-id))
+
 (defmethod slack-message-sender-name ((m slack-file-comment-message) team)
   (slack-user-name (oref (oref m comment) user) team))
 
