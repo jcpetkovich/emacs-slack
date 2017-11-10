@@ -313,5 +313,13 @@
   (with-slots (team) this
     (slack-slash-commands-execute command team)))
 
+(defun slack--get-channel-id ()
+  (interactive)
+  (with-current-buffer (current-buffer)
+    (with-slots (room) slack-current-buffer
+      (let ((id (oref room id)))
+        (kill-new id)
+        (message "CHANNEL-ID: %s" (oref room id))))))
+
 (provide 'slack-message-buffer)
 ;;; slack-message-buffer.el ends here
