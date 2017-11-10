@@ -104,7 +104,9 @@
                         (seconds-to-time ts))))
 
 (defmethod slack-message-header ((m slack-message) team)
-  (slack-message-sender-name m team))
+  (format "%s %s"
+          (slack-message-sender-name m team)
+          (if (slack-starred-p m team) ":star:" "")))
 
 (defalias 'slack-starred-p 'slack-message-starred-p)
 
@@ -131,10 +133,7 @@
       header)))
 
 (defun slack-message-header-to-string (m team)
-  (let ((header (format "%s %s"
-                        (slack-message-put-header-property
-                         (slack-message-header m team))
-                        (if (slack-starred-p m team) ":star:" ""))))
+  (let ((header (slack-message-put-header-property (slack-message-header m team))))
     (if (slack-team-display-profile-imagep team)
         (slack-message-header-with-image m header team)
       header)))

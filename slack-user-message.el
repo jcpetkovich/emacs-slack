@@ -22,9 +22,11 @@
            (time (slack-message-time-to-string ts))
            (edited-at (slack-message-time-to-string edited-at))
            (deleted-at (slack-message-time-to-string deleted-at))
-           (header (or (and status (< 0 (length status))
-                            (format "%s %s" name status))
-                       (format "%s" name))))
+           (header (format "%s %s"
+                           (or (and status (< 0 (length status))
+                                    (format "%s %s" name status))
+                               (format "%s" name))
+                           (if (slack-starred-p m team) ":star:" ""))))
       (if deleted-at
           (format "%s deleted_at: %s" header deleted-at)
         (if edited-at
